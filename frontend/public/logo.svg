@@ -1,0 +1,22 @@
+<svg width="250" height="60" viewBox="0 0 250 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&amp;display=swap');
+    </style>
+  </defs>
+  
+  <!-- Icon: Modern Abstract Media/Thumbnail Icon -->
+  <g transform="translate(5, 10)">
+    <!-- Main Box -->
+    <rect width="40" height="40" rx="12" stroke="white" stroke-width="4" fill="none"/>
+    <!-- Sun/Circle -->
+    <circle cx="14" cy="14" r="3.5" fill="white"/>
+    <!-- Mountain/Wave simplified -->
+    <path d="M4 30C4 30 10 24 16 24C22 24 26 30 30 26C34 22 36 24 36 24V32C36 34.2091 34.2091 36 32 36H8C5.79086 36 4 34.2091 4 32V30Z" fill="white"/>
+  </g>
+
+  <!-- Text -->
+  <text x="60" y="41" font-family="'Poppins', sans-serif" font-weight="700" font-size="32" fill="white" letter-spacing="-0.5">
+    Pixel<tspan fill="#ec4899">Thumb</tspan>
+  </text>
+</svg>
