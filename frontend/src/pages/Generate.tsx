@@ -7,9 +7,10 @@ import {
   type ThumbnailStyle,
 } from "../assets/assets";
 import AspectRatioSelector from "../components/AspectRatioSelector";
+import ColorSchemeSelector from "../components/ColorSchemeSelector";
+import PreviewPanel from "../components/PreviewPanel";
 import SoftBackdrop from "../components/SoftBackdrop";
 import StyleSelector from "../components/StyleSelector";
-import ColorSchemeSelector from "../components/ColorSchemeSelector";
 
 function Generate() {
   const { id } = useParams();
@@ -102,7 +103,19 @@ function Generate() {
               </div>
             </div>
             {/* RIGHT PANEL */}
-            <div></div>
+            <div>
+              {/* Preview Panel */}
+              <div className="p-6 rounded-2xl bg-white/8 border border-white/10 shadow-xl">
+                <h1 className="text-lg font-semibold text-zinc-100 mb-4">
+                  Preview
+                </h1>
+                <PreviewPanel
+                  thumbnail={thumbnail}
+                  isLoading={loading}
+                  aspectRatio={aspectRatio}
+                />
+              </div>
+            </div>
           </div>
         </main>
       </div>
