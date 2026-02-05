@@ -66,3 +66,14 @@ export const loginUser = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const logoutUser = (req: Request, res: Response) => {
+  req.session.destroy((error: any) => {
+    if (error) {
+      console.log(error);
+      return res.status(500).json({ message: "Failed to log out" });
+    }
+  });
+
+  res.status(200).json({ message: "User logged out successfully" });
+};
