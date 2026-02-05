@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import express, { Request, Response } from "express";
 import session from "express-session";
 import connectDB from "./config/db.js";
+import authRouter from "./routes/auth.route.js";
 
 dotenv.config();
 
@@ -46,6 +47,8 @@ app.use(express.json());
 app.get("/", (req: Request, res: Response) => {
   res.send("Server is Live!");
 });
+
+app.use("/api/auth", authRouter);
 
 const PORT = process.env.PORT || 3000;
 

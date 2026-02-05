@@ -67,7 +67,7 @@ export const loginUser = async (req: Request, res: Response) => {
   }
 };
 
-export const logoutUser = (req: Request, res: Response) => {
+export const logoutUser = async (req: Request, res: Response) => {
   req.session.destroy((error: any) => {
     if (error) {
       console.log(error);
@@ -76,4 +76,28 @@ export const logoutUser = (req: Request, res: Response) => {
   });
 
   res.status(200).json({ message: "User logged out successfully" });
+};
+
+export const verifyUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.session;
+
+    const user = await User.findById(userId).select("-password");
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid user" });
+    }
+
+    res.status(200).json({
+      message: "User verified successfully",
+      user: {
+        id: user._id.toString(),
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
