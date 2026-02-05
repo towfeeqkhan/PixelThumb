@@ -35,3 +35,34 @@ export const registerUser = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+export const loginUser = async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password!);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid email or password" });
+    }
+
+    req.session.isLoggedIn = true;
+    req.session.userId = user._id.toString();
+
+    res.status(200).json({
+      message: "User logged in successfully",
+      user: {
+        id: user._id.toString(),
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error: any) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
