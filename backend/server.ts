@@ -5,6 +5,7 @@ import express, { Request, Response } from "express";
 import session from "express-session";
 import connectDB from "./config/db.js";
 import authRouter from "./routes/auth.route.js";
+import thumbnailRouter from "./routes/thumbnail.route.js";
 
 dotenv.config();
 
@@ -49,6 +50,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/auth", authRouter);
+app.use("/api/thumbnail", thumbnailRouter);
 
 const PORT = process.env.PORT || 3000;
 
