@@ -98,10 +98,6 @@ export const generateThumbnail = async (req: Request, res: Response) => {
       prompt += ` Additional details: ${user_prompt}.`;
     }
 
-    if (text_overlay) {
-      prompt += ` The image must feature the text "${text_overlay}" clearly and legibly.`;
-    }
-
     prompt += ` The thumbnail should be ${
       aspect_ratio || "16:9"
     }, visually striking, professional, and high-resolution.`;
@@ -184,11 +180,11 @@ export const generateThumbnail = async (req: Request, res: Response) => {
 
 export const deleteThumbnail = async (req: Request, res: Response) => {
   try {
-    const {id} = req.params;
-    const {userId} = req.session;
+    const { id } = req.params;
+    const { userId } = req.session;
 
-    await Thumbnail.findOneAndDelete({_id: id, userId});
-    
+    await Thumbnail.findOneAndDelete({ _id: id, userId });
+
     res.status(200).json({
       message: "Thumbnail deleted successfully",
     });
