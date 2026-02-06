@@ -181,3 +181,22 @@ export const generateThumbnail = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const deleteThumbnail = async (req: Request, res: Response) => {
+  try {
+    const {id} = req.params;
+    const {userId} = req.session;
+
+    await Thumbnail.findOneAndDelete({_id: id, userId});
+    
+    res.status(200).json({
+      message: "Thumbnail deleted successfully",
+    });
+  } catch (error: any) {
+    console.error("Error deleting thumbnail:", error);
+    res.status(500).json({
+      message: "Failed to delete thumbnail",
+      error: error.message,
+    });
+  }
+};
