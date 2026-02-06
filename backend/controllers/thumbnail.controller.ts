@@ -88,7 +88,7 @@ export const generateThumbnail = async (req: Request, res: Response) => {
         color_scheme as keyof typeof colorSchemeDescriptions
       ] || "";
 
-    let prompt = `Create a ${selectedStyle} for a video titled: "${title}".`;
+    let prompt = `Create a ${selectedStyle} for a video titled: ${title}.`;
 
     if (selectedColor) {
       prompt += ` Use a ${selectedColor} color scheme.`;
@@ -143,9 +143,13 @@ export const generateThumbnail = async (req: Request, res: Response) => {
     fs.writeFileSync(filePath, finalBuffer);
 
     // 6. Upload to Cloudinary
+    const publicId = `PixelThumb-Generated-thumbnail-${Date.now()}`;
+
     const uploadResult = await cloudinary.uploader.upload(filePath, {
       resource_type: "image",
       folder: "thumbnails",
+      public_id: publicId,
+      overwrite: false,
     });
 
     // 7. Update DB (SUCCESS)

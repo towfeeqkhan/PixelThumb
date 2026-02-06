@@ -1,13 +1,12 @@
 import MongoStore from "connect-mongo";
 import cors from "cors";
-import dotenv from "dotenv";
+import "dotenv/config";
 import express, { Request, Response } from "express";
 import session from "express-session";
 import connectDB from "./config/db.js";
 import authRouter from "./routes/auth.route.js";
 import thumbnailRouter from "./routes/thumbnail.route.js";
-
-dotenv.config();
+import userRouter from "./routes/user.route.js";
 
 declare module "express-session" {
   interface SessionData {
@@ -51,6 +50,7 @@ app.get("/", (req: Request, res: Response) => {
 
 app.use("/api/auth", authRouter);
 app.use("/api/thumbnail", thumbnailRouter);
+app.use("/api/user", userRouter);
 
 const PORT = process.env.PORT || 3000;
 

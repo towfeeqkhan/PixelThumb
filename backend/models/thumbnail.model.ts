@@ -33,7 +33,7 @@ const thumbnailSchema = new mongoose.Schema<IThumbnail>(
   {
     userId: { type: String, required: true, ref: "User" },
     title: { type: String, required: true, trim: true },
-    description: { type: String, required: true, trim: true },
+    description: { type: String, trim: true },
     style: {
       type: String,
       required: true,
