@@ -61,12 +61,14 @@ Built with performance, scalability, and creator experience in mind.
 - MongoDB
 - Mongoose ODM
 
+---
+
 ### 📜 License
 - This project is licensed under the MIT License.
 - Feel free to use, modify, and distribute.
 
 ### ⭐ Support
-If you like this project:
+  If you like this project:
 
 - ⭐ Star the repo
 
