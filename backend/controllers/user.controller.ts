@@ -29,7 +29,7 @@ export const getUserThumbnailById = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Thumbnail not found" });
     }
 
-    res.json(thumbnail);
+    res.json({ thumbnail });
   } catch (error: any) {
     console.error("Error fetching user thumbnail by ID:", error);
     res.status(500).json({ message: "Internal server error" });

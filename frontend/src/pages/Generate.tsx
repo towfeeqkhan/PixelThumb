@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   colorSchemes,
-  dummyThumbnails,
   type AspectRatio,
   type IThumbnail,
   type ThumbnailStyle,
@@ -12,9 +12,15 @@ import ColorSchemeSelector from "../components/ColorSchemeSelector";
 import PreviewPanel from "../components/PreviewPanel";
 import SoftBackdrop from "../components/SoftBackdrop";
 import StyleSelector from "../components/StyleSelector";
+import api from "../configs/api";
+import { useAuth } from "../context/AuthContext";
 
 function Generate() {
   const { id } = useParams();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
+
   const [title, setTitle] = useState("");
   const [additionalDetails, setAdditionalDetails] = useState("");
   const [thumbnail, setThumbnail] = useState<IThumbnail | null>(null);
@@ -26,26 +32,74 @@ function Generate() {
   const [style, setStyle] = useState<ThumbnailStyle>("Bold & Graphic");
   const [styleDropdownOpen, setStyleDropdownOpen] = useState(false);
 
-  const handleGenerate = async () => {};
+  const handleGenerate = async () => {
+    if (!isLoggedIn)
+      return toast.error("Please log in to generate thumbnails.");
+    if (!title.trim()) return toast.error("Please enter a title");
+    setLoading(true);
 
-  const fetchThumbnail = async () => {
-    if (id) {
-      const thumbnail: any = dummyThumbnails.find((thumb) => thumb._id === id);
-      setThumbnail(thumbnail);
-      setAdditionalDetails(thumbnail.user_prompt);
-      setTitle(thumbnail.title);
-      setColorSchemeId(thumbnail.color_scheme);
-      setAspectRatio(thumbnail.aspect_ratio);
-      setStyle(thumbnail.style);
+    try {
+      const api_payload = {
+        title,
+        user_prompt: additionalDetails,
+        style,
+        aspect_ratio: aspectRatio,
+        color_scheme: colorSchemeId,
+        text_overlay: true,
+      };
+
+      const { data } = await api.post("/api/thumbnail/generate", api_payload);
+      if (data?.thumbnail) {
+        navigate(`/generate/${data.thumbnail._id}`);
+        toast.success(data.message || "Thumbnail generated successfully");
+      } else {
+        toast.error("Failed to generate thumbnail. Please try again.");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred while generating thumbnail.");
+    } finally {
       setLoading(false);
     }
   };
 
+  const fetchThumbnail = async () => {
+    try {
+      const { data } = await api.get(`/api/user/thumbnail/${id}`);
+      setThumbnail(data?.thumbnail as IThumbnail);
+      setLoading(!data?.thumbnail?.image_url);
+      setAdditionalDetails(data?.thumbnail?.user_prompt || "");
+      setTitle(data?.thumbnail?.title || "");
+      setColorSchemeId(data?.thumbnail?.color_scheme || colorSchemes[0].id);
+      setAspectRatio(data?.thumbnail?.aspect_ratio || "16:9");
+      setStyle(data?.thumbnail?.style || "Bold & Graphic");
+    } catch (error) {
+      toast.error("Failed to fetch thumbnail. Please try again.");
+    }
+  };
+
   useEffect(() => {
-    if (id) {
+    if (isLoggedIn && id) {
       fetchThumbnail();
     }
-  }, [id]);
+    if (id && isLoggedIn && loading) {
+      const interval = setInterval(() => {
+        fetchThumbnail();
+      }, 5000);
+      return () => clearInterval(interval);
+    }
+  }, [id, isLoggedIn, loading]);
+
+  useEffect(() => {
+    if (!id && !thumbnail) {
+      setThumbnail(null);
+      setTitle("");
+      setAdditionalDetails("");
+      setAspectRatio("16:9");
+      setColorSchemeId(colorSchemes[0].id);
+      setStyle("Bold & Graphic");
+    }
+  }, [pathname]);
 
   return (
     <>
