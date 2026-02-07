@@ -1,10 +1,14 @@
 import { ArrowUpRightIcon, DownloadIcon, TrashIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-import { dummyThumbnails, type IThumbnail } from "../assets/assets";
+import { type IThumbnail } from "../assets/assets";
 import SoftBackdrop from "../components/SoftBackdrop";
+import api from "../configs/api";
+import { useAuth } from "../context/AuthContext";
 
 const MyGeneration = () => {
+  const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
   const aspectRatioClassMap: Record<string, string> = {
     "16:9": "aspect-video",
@@ -16,21 +20,64 @@ const MyGeneration = () => {
   const [loading, setLoading] = useState(false);
 
   const fetchThumbnails = async () => {
-    setThumbnails(dummyThumbnails as unknown as IThumbnail[]);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const { data } = await api.get(`/api/user/thumbnails`);
+      setThumbnails(data.thumbnails! || []);
+    } catch (error: any) {
+      console.error("Failed to fetch thumbnails:", error);
+      toast.error("Failed to load your generations. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDownload = (image_url: string) => {
-    window.open(image_url, "_blank");
+    if (!image_url) return;
+    const imageUrl = image_url;
+
+    fetch(imageUrl)
+      .then((res) => res.blob())
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `PixelThumb-Generated-Thumbnail-${Date.now()}.png`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      })
+      .catch(() => {
+        const link = document.createElement("a");
+        link.href = imageUrl.replace("/upload/", "/upload/fl_attachment/");
+        link.download = `PixelThumb-Generated-Thumbnail-${Date.now()}.png`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      });
   };
 
   const handleDelete = async (id: string) => {
-    console.log("Delete thumbnail with id:", id);
+    try {
+      const confirmDelete = window.confirm(
+        "Are you sure you want to delete this thumbnail? This action cannot be undone.",
+      );
+      if (!confirmDelete) return;
+      await api.delete(`/api/thumbnail/delete/${id}`);
+      toast.success("Thumbnail deleted successfully.");
+      setThumbnails((prev) => prev.filter((thumb) => thumb._id !== id));
+    } catch (error: any) {
+      console.error("Failed to delete thumbnail:", error);
+      toast.error("Failed to delete thumbnail. Please try again.");
+    }
   };
 
   useEffect(() => {
-    fetchThumbnails();
-  }, []);
+    if (isLoggedIn) {
+      fetchThumbnails();
+    }
+  }, [isLoggedIn]);
 
   return (
     <>

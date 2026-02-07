@@ -12,7 +12,7 @@ export const getUserThumbnails = async (req: Request, res: Response) => {
         .status(404)
         .json({ message: "No thumbnails found for this user" });
     }
-    res.json(thumbnails);
+    res.json({ thumbnails });
   } catch (error: any) {
     console.error("Error fetching user thumbnails:", error);
     res.status(500).json({ message: "Internal server error" });
