@@ -54,7 +54,7 @@ export default function Navbar() {
 
         <div className="flex items-center gap-2">
           {isLoading ? (
-            <div className="w-8 h-8 rounded-full bg-white/20 animate-pulse"></div>
+            <div className="hidden md:block w-8 h-8 rounded-full bg-white/20 animate-pulse"></div>
           ) : isLoggedIn && user ? (
             <div className="relative group">
               <button className="hidden md:block rounded-full size-8 bg-white/20 border-2 border-white/10">

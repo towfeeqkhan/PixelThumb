@@ -18,7 +18,28 @@ const PreviewPanel = ({
 
   const onDownload = () => {
     if (!thumbnail?.image_url) return;
-    window.open(thumbnail.image_url, "_blank");
+    const imageUrl = thumbnail.image_url;
+
+    fetch(imageUrl)
+      .then((res) => res.blob())
+      .then((blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `PixelThumb-Generated-Thumbnail-${Date.now()}.png`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.URL.revokeObjectURL(url);
+      })
+      .catch(() => {
+        const link = document.createElement("a");
+        link.href = imageUrl.replace("/upload/", "/upload/fl_attachment/");
+        link.download = `PixelThumb-Generated-Thumbnail-${Date.now()}.png`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+      });
   };
 
   return (
@@ -46,7 +67,7 @@ const PreviewPanel = ({
               alt={thumbnail.title}
               className="h-full w-full object-cover"
             />
-            <div className="absolute inset-0 flex items-end justify-center bg-black/10 opacity-0 transition-opacity group-hover:opacity-100">
+            <div className="absolute inset-0 flex items-end justify-center bg-black/10 opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100">
               <button
                 onClick={onDownload}
                 type="button"
