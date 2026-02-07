@@ -9,6 +9,7 @@ import Generate from "./pages/Generate";
 import HomePage from "./pages/HomePage";
 import MyGeneration from "./pages/MyGeneration";
 import YtPreview from "./pages/YtPreview";
+import { Toaster } from "react-hot-toast";
 
 export default function App() {
   const { pathname } = useLocation();
@@ -18,6 +19,7 @@ export default function App() {
   }, [pathname]);
   return (
     <>
+      <Toaster />
       <LenisScroll />
       <Navbar />
       <Routes>

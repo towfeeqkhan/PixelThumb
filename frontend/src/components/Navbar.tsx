@@ -2,8 +2,10 @@ import { MenuIcon, XIcon } from "lucide-react";
 import { motion } from "motion/react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Navbar() {
+  const { isLoggedIn, user, logout, isLoading } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -33,20 +35,53 @@ export default function Navbar() {
           <Link to="/generate" className="hover:text-pink-300 transition">
             Generate
           </Link>
-          <Link to="/my-generation" className="hover:text-pink-300 transition">
-            My Generations
-          </Link>
+          {isLoggedIn && user ? (
+            <Link
+              to="/my-generation"
+              className="hover:text-pink-300 transition"
+            >
+              My Generations
+            </Link>
+          ) : (
+            <Link to="#" className="hover:text-pink-300 transition">
+              About
+            </Link>
+          )}
           <Link to="#" className="hover:text-pink-300 transition">
             Contact
           </Link>
         </div>
 
-        <button
-          onClick={() => navigate("/login")}
-          className="hidden md:block px-6 py-2.5 bg-pink-600 hover:bg-pink-700 active:scale-95 transition-all rounded-full"
-        >
-          Get Started
-        </button>
+        <div className="flex items-center gap-2">
+          {isLoading ? (
+            <div className="w-8 h-8 rounded-full bg-white/20 animate-pulse"></div>
+          ) : isLoggedIn && user ? (
+            <div className="relative group">
+              <button className="rounded-full size-8 bg-white/20 border-2 border-white/10">
+                {user?.name.charAt(0).toUpperCase()}
+              </button>
+              <div className="absolute hidden group-hover:block top-6 right-0 pt-4">
+                <button
+                  className="bg-white/20 border-2 border-white/10 px-5 py-1.5 rounded"
+                  onClick={() => {
+                    logout();
+                    navigate("/");
+                  }}
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              onClick={() => navigate("/login")}
+              className="hidden md:block px-6 py-2.5 bg-pink-600 hover:bg-pink-700 active:scale-95 transition-all rounded-full"
+            >
+              Get Started
+            </button>
+          )}
+        </div>
+
         <button onClick={() => setIsOpen(true)} className="md:hidden">
           <MenuIcon size={26} className="active:scale-90 transition" />
         </button>
@@ -61,15 +96,33 @@ export default function Navbar() {
         <Link to="/generate" onClick={() => setIsOpen(false)}>
           Generate
         </Link>
-        <Link to="/my-generation" onClick={() => setIsOpen(false)}>
-          My Generations
-        </Link>
+        {isLoggedIn && user ? (
+          <Link to="/my-generation" onClick={() => setIsOpen(false)}>
+            My Generations
+          </Link>
+        ) : (
+          <Link to="#" onClick={() => setIsOpen(false)}>
+            About
+          </Link>
+        )}
         <Link to="#" onClick={() => setIsOpen(false)}>
           Contact
         </Link>
-        <Link to="/login" onClick={() => setIsOpen(false)}>
-          Login
-        </Link>
+        {isLoggedIn && user ? (
+          <button
+            onClick={() => {
+              setIsOpen(false);
+              logout();
+            }}
+          >
+            Logout
+          </button>
+        ) : (
+          <Link to="/login" onClick={() => setIsOpen(false)}>
+            Login
+          </Link>
+        )}
+
         <button
           onClick={() => setIsOpen(false)}
           className="active:ring-3 active:ring-white aspect-square size-10 p-1 items-center justify-center bg-pink-600 hover:bg-pink-700 transition text-white rounded-md flex"
