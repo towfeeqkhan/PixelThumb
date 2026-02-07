@@ -1,4 +1,4 @@
-# 🎨 PixelThumb — AI Thumbnail Generator
+# PixelThumb — AI Thumbnail Generator
 
 PixelThumb is a modern **AI-powered thumbnail generator** that helps creators generate **high-converting, professional thumbnails** for YouTube, Shorts, Reels, and social media in seconds.
 
@@ -7,6 +7,8 @@ Built with performance, scalability, and creator experience in mind.
 ## 📸 Screenshots
 
 <img width="1920" height="1080" alt="Screenshot (187)" src="https://github.com/user-attachments/assets/159f1700-b8dd-4b90-97fd-8f23b7ab77f6" />
+
+<img width="1920" height="1080" alt="Screenshot (188)" src="https://github.com/user-attachments/assets/2c03ea5d-75dd-460b-ba52-5e4dc33fe2e1" />
 
 
 ## 🚀 Live Project
