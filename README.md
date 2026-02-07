@@ -13,7 +13,7 @@ Built with performance, scalability, and creator experience in mind.
 
 ## 🚀 Live Project
 
-🔗 **Live Project Link:** 
+🔗 **Live Project Link:** https://pixelthumb.vercel.app
 
 ---
 
