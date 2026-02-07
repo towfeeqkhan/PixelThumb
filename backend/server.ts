@@ -29,12 +29,20 @@ app.use(
   }),
 );
 
+// Trust proxy (required for secure cookies behind proxies like Nginx/Vercel/Heroku)
+app.set("trust proxy", 1);
+
 app.use(
   session({
     secret: process.env.SESSION_SECRET as string,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 }, // 7 days
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+      secure: process.env.NODE_ENV === "production", // Secure in production
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // None for cross-site
+      httpOnly: true,
+    },
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_URI as string,
       collectionName: "sessions",
