@@ -1,8 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 import SoftBackdrop from "./SoftBackdrop";
 
 function Login() {
   const [state, setState] = useState("login");
+  const { user, login, signup } = useAuth();
+
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -17,16 +22,35 @@ function Login() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (state === "login") {
+      login({
+        email: formData.email,
+        password: formData.password,
+      });
+    } else {
+      signup({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+    }
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
   return (
     <>
       <SoftBackdrop />
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center px-4">
         <form
           onSubmit={handleSubmit}
-          className="w-full sm:w-87.5 text-center bg-white/6 border border-white/10 rounded-2xl px-8"
+          className="w-full max-w-sm sm:w-96 text-center bg-white/6 border border-white/10 rounded-2xl px-8"
         >
-          <h1 className="text-white text-3xl mt-10 font-medium">
+          <h1 className="text-white text-2xl sm:text-3xl mt-10 font-medium">
             {state === "login" ? "Login" : "Sign up"}
           </h1>
 

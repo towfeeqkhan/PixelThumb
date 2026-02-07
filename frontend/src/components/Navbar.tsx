@@ -57,7 +57,7 @@ export default function Navbar() {
             <div className="w-8 h-8 rounded-full bg-white/20 animate-pulse"></div>
           ) : isLoggedIn && user ? (
             <div className="relative group">
-              <button className="rounded-full size-8 bg-white/20 border-2 border-white/10">
+              <button className="hidden md:block rounded-full size-8 bg-white/20 border-2 border-white/10">
                 {user?.name.charAt(0).toUpperCase()}
               </button>
               <div className="absolute hidden group-hover:block top-6 right-0 pt-4">
